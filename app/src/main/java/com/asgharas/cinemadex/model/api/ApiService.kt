@@ -8,13 +8,19 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    companion object{
+    companion object {
         const val BASE_URL = "https://api.themoviedb.org/4/"
     }
 
     @GET("discover/movie")
-    suspend fun getDiscoverMovies(@Query("api_key") api_key: String): Response<DiscoverMovieResponse>
+    suspend fun getDiscoverMovies(
+        @Query("api_key") api_key: String,
+        @Query("page") page: Int
+    ): Response<DiscoverMovieResponse>
 
     @GET("discover/tv")
-    suspend fun getDiscoverTv(@Query("api_key") api_key: String): Response<DiscoverTVResponse>
+    suspend fun getDiscoverTv(
+        @Query("api_key") api_key: String,
+        @Query("page") page: Int
+    ): Response<DiscoverTVResponse>
 }

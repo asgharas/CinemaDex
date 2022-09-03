@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.asgharas.cinemadex.model.data.Movie
 import com.asgharas.cinemadex.model.repository.CinemaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,4 +23,11 @@ class MovieViewModel @Inject constructor(private val repository: CinemaRepositor
 
     val moviesList: LiveData<List<Movie>>
     get() = repository.movies
+
+    fun loadNextPage(){
+        viewModelScope.launch(Dispatchers.IO) {
+            Thread.sleep(3000)
+            repository.loadNextMoviePage()
+        }
+    }
 }

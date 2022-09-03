@@ -12,20 +12,26 @@ import com.asgharas.cinemadex.model.data.Tv
 import com.asgharas.cinemadex.other.IMAGE_BASE_URL
 import com.bumptech.glide.Glide
 
-class TvAdapter(private val context: Context, private val tvClickListener: TvClickListener): RecyclerView.Adapter<TvAdapter.TvViewHolder>() {
+class TvAdapter(
+    private val context: Context,
+    private val tvClickListener: TvClickListener,
+    private val reachedBottomListener: ReachedBottomListener
+) :
+    RecyclerView.Adapter<TvAdapter.TvViewHolder>() {
 
-    inner class TvViewHolder(val binding: MovieViewBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(tv: Tv){
+    inner class TvViewHolder(val binding: MovieViewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(tv: Tv) {
             Glide.with(context)
-                .load(IMAGE_BASE_URL +tv.poster_path)
+                .load(IMAGE_BASE_URL + tv.poster_path)
                 .placeholder(R.drawable.template_placeholder)
                 .error(R.drawable.template_placeholder)
-                .override(500,750)
+                .override(500, 750)
                 .into(binding.rvMoviePoster)
         }
     }
 
-    private val diffUtil = object: DiffUtil.ItemCallback<Tv>() {
+    private val diffUtil = object : DiffUtil.ItemCallback<Tv>() {
         override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean =
             oldItem.id == newItem.id
 
@@ -45,6 +51,9 @@ class TvAdapter(private val context: Context, private val tvClickListener: TvCli
             tvClickListener.handleTvClick(differ.currentList[position])
         }
         holder.bind(differ.currentList[position])
+        if(position == differ.currentList.size - 1) {
+            reachedBottomListener.onReachedBottom()
+        }
     }
 
     override fun getItemCount(): Int =

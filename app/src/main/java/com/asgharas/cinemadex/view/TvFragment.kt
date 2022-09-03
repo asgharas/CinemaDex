@@ -14,7 +14,7 @@ import com.asgharas.cinemadex.viewmodel.TvViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TvFragment : Fragment(), TvClickListener {
+class TvFragment : Fragment(), TvClickListener, ReachedBottomListener {
 
     private lateinit var binding: FragmentTvBinding
     private lateinit var tvViewModel: TvViewModel
@@ -22,11 +22,11 @@ class TvFragment : Fragment(), TvClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentTvBinding.inflate(inflater, container, false)
         tvViewModel = ViewModelProvider(this)[TvViewModel::class.java]
 
-        val tvAdapter = TvAdapter(requireContext(), this)
+        val tvAdapter = TvAdapter(requireContext(), this, this)
         val layoutManager = GridLayoutManager(requireContext(), 3)
         val recyclerView = binding.recyclerViewTv
         recyclerView.adapter = tvAdapter
@@ -45,5 +45,10 @@ class TvFragment : Fragment(), TvClickListener {
             putExtra("tv_show", tv)
             startActivity(this)
         }
+    }
+
+    override fun onReachedBottom() {
+        binding.progressBarTv.visibility = View.VISIBLE
+        tvViewModel.loadNextPage()
     }
 }
