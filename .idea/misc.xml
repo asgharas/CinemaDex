@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/baseline_search_black_48dp.xml" value="0.159" />
+        <entry key="app/src/main/res/drawable/rounded_edit_text_bg.xml" value="0.1955" />
         <entry key="app/src/main/res/drawable/rounded_shape.xml" value="0.202" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.34427083333333336" />
         <entry key="app/src/main/res/layout/activity_single_movie.xml" value="0.34427083333333336" />
@@ -13,6 +15,7 @@
         <entry key="app/src/main/res/layout/fragment_t_v.xml" value="0.34427083333333336" />
         <entry key="app/src/main/res/layout/fragment_tv.xml" value="0.34427083333333336" />
         <entry key="app/src/main/res/layout/movie_view.xml" value="0.4" />
+        <entry key="app/src/main/res/layout/search_item.xml" value="0.34270833333333334" />
         <entry key="app/src/main/res/menu/cinema_menu.xml" value="0.33897435897435896" />
       </map>
     </option>
