@@ -6,21 +6,32 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
-
+// TODO remove logging from RELEASE build code
 @Module
 @InstallIn(SingletonComponent::class)
 class SingletonModule {
 
     @Provides
     @Singleton
-    fun providesRetrofit(): Retrofit =
-        Retrofit.Builder()
+    fun providesRetrofit(): Retrofit {
+        val interceptor = HttpLoggingInterceptor().apply {
+            setLevel(HttpLoggingInterceptor.Level.HEADERS)
+        }
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .build()
+
+        return Retrofit.Builder()
             .baseUrl(ApiService.BASE_URL)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
 
     @Provides
     @Singleton

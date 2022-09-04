@@ -1,6 +1,5 @@
 package com.asgharas.cinemadex.model.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.asgharas.cinemadex.model.api.ApiService
@@ -66,7 +65,6 @@ class CinemaRepository @Inject constructor(private val apiService: ApiService) {
     suspend fun searchMovie(queryString: String){
         val result = apiService.searchMovie(API_KEY, queryString)
         if(result.body() != null && result.isSuccessful) {
-            Log.d("TESTING ", "searchMovie: ${result.body()!!.results[0]}")
             moviesSearchLiveData.postValue(result.body()!!.results)
         }
     }

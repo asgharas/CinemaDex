@@ -1,10 +1,13 @@
 package com.asgharas.cinemadex.view
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -80,6 +83,7 @@ class SearchFragment : Fragment(), TvClickListener, MovieClickListener {
 
     private fun searchOff(){
         binding.progressBar2.visibility = View.GONE
+        hideKeyboard()
     }
 
     private fun checkEditText(): Boolean {
@@ -106,6 +110,16 @@ class SearchFragment : Fragment(), TvClickListener, MovieClickListener {
             putExtra("tv_show", tv)
             startActivity(this)
         }
+    }
+
+    fun Fragment.hideKeyboard() {
+        view?.let { activity?.hideKeyboard(it) }
+    }
+
+
+    fun Context.hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
 
