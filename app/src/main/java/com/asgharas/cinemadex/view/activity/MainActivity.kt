@@ -1,4 +1,4 @@
-package com.asgharas.cinemadex.view
+package com.asgharas.cinemadex.view.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

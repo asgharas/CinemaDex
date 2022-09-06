@@ -1,13 +1,17 @@
 package com.asgharas.cinemadex.model.data
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@Entity(tableName = "Movie")
 data class Movie(
+    @PrimaryKey(autoGenerate = true)
+    val realId: Int = 0,
     val adult: Boolean,
     val backdrop_path: String,
-    val genre_ids: List<Int>,
     val id: Int,
     val original_language: String,
     val original_title: String,

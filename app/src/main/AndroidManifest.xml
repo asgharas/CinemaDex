@@ -17,12 +17,12 @@
         android:theme="@style/Theme.CinemaDex"
         tools:targetApi="31">
         <activity
-            android:name=".view.SingleTvActivity"
+            android:name=".view.activity.SingleTvActivity"
             android:exported="false" />
-        <activity android:name=".view.SingleMovieActivity"
+        <activity android:name=".view.activity.SingleMovieActivity"
             android:exported="false" />
         <activity
-            android:name=".view.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>

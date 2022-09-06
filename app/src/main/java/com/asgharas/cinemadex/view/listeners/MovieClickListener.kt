@@ -1,4 +1,4 @@
-package com.asgharas.cinemadex.view
+package com.asgharas.cinemadex.view.listeners
 
 import com.asgharas.cinemadex.model.data.Movie
 

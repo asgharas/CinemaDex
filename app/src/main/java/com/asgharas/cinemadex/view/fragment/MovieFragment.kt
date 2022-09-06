@@ -1,7 +1,8 @@
-package com.asgharas.cinemadex.view
+package com.asgharas.cinemadex.view.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +12,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.asgharas.cinemadex.databinding.FragmentMovieBinding
 import com.asgharas.cinemadex.model.data.Movie
+import com.asgharas.cinemadex.view.activity.SingleMovieActivity
+import com.asgharas.cinemadex.view.activity.TAG
+import com.asgharas.cinemadex.view.adapter.MovieAdapter
+import com.asgharas.cinemadex.view.listeners.LongClickListener
+import com.asgharas.cinemadex.view.listeners.MovieClickListener
+import com.asgharas.cinemadex.view.listeners.ReachedBottomListener
 import com.asgharas.cinemadex.viewmodel.MovieViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MovieFragment : Fragment(), MovieClickListener, ReachedBottomListener {
+class MovieFragment : Fragment(), MovieClickListener, ReachedBottomListener, LongClickListener {
 
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var binding: FragmentMovieBinding
@@ -26,7 +33,7 @@ class MovieFragment : Fragment(), MovieClickListener, ReachedBottomListener {
     ): View {
         binding = FragmentMovieBinding.inflate(inflater, container, false)
         movieViewModel = ViewModelProvider(this)[MovieViewModel::class.java]
-        val movieAdapter = MovieAdapter(requireContext(), this, this)
+        val movieAdapter = MovieAdapter(requireContext(), this, this, this)
         val movieRecyclerView = binding.movieRecyclerView
         movieRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         movieRecyclerView.adapter = movieAdapter
@@ -54,5 +61,9 @@ class MovieFragment : Fragment(), MovieClickListener, ReachedBottomListener {
         Log.d(TAG, "onReachedBottom: REACHED BOTTOM")
         binding.progressBar.visibility = View.VISIBLE
         movieViewModel.loadNextPage()
+    }
+
+    override fun handleLongClick(cinemaItem: Parcelable) {
+        //
     }
 }

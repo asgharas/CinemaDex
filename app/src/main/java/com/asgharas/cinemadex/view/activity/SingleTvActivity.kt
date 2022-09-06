@@ -1,13 +1,18 @@
-package com.asgharas.cinemadex.view
+package com.asgharas.cinemadex.view.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.asgharas.cinemadex.R
 import com.asgharas.cinemadex.databinding.ActivitySingleTvBinding
 import com.asgharas.cinemadex.model.data.Tv
 import com.asgharas.cinemadex.other.IMAGE_BASE_URL
+import com.asgharas.cinemadex.viewmodel.FavouriteViewModel
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SingleTvActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySingleTvBinding
@@ -17,8 +22,14 @@ class SingleTvActivity : AppCompatActivity() {
         binding = ActivitySingleTvBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val tvShow: Tv? = intent.getParcelableExtra("tv_show")
-
-        if(tvShow != null) setupUi(tvShow)
+        val favouriteViewModel = ViewModelProvider(this)[FavouriteViewModel::class.java]
+        if(tvShow != null) {
+            setupUi(tvShow)
+            binding.btnFavourite.setOnClickListener {
+                favouriteViewModel.addTvFavourite(tvShow)
+                Snackbar.make(binding.root, "Added to favourites", Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupUi(tvShow: Tv) {

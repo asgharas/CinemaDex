@@ -4,7 +4,7 @@
     <item
         android:icon="@drawable/ic_movie"
         android:id="@id/movieFragment"
-        android:title="Movies" />
+        android:title="@string/movies" />
     <item
         android:icon="@drawable/ic_baseline_tv_24"
         android:id="@id/tvFragment"
@@ -14,7 +14,7 @@
         android:id="@id/searchFragment"
         android:title="Search" />
     <item
-        android:icon="@drawable/ic_settings"
-        android:id="@id/settingFragment"
-        android:title="Settings" />
+        android:icon="@drawable/ic_favourite"
+        android:id="@id/favouriteFragment"
+        android:title="Favourites" />
 </menu>

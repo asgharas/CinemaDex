@@ -8,22 +8,22 @@
 
     <fragment
         android:id="@+id/movieFragment"
-        android:name="com.asgharas.cinemadex.view.MovieFragment"
+        android:name="com.asgharas.cinemadex.view.fragment.MovieFragment"
         android:label="fragment_movie"
         tools:layout="@layout/fragment_movie" />
     <fragment
         android:id="@+id/tvFragment"
-        android:name="com.asgharas.cinemadex.view.TvFragment"
+        android:name="com.asgharas.cinemadex.view.fragment.TvFragment"
         android:label="fragment_tv"
         tools:layout="@layout/fragment_tv" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.asgharas.cinemadex.view.SearchFragment"
+        android:name="com.asgharas.cinemadex.view.fragment.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
     <fragment
-        android:id="@+id/settingFragment"
-        android:name="com.asgharas.cinemadex.view.SettingFragment"
-        android:label="fragment_setting"
-        tools:layout="@layout/fragment_setting" />
+        android:id="@+id/favouriteFragment"
+        android:name="com.asgharas.cinemadex.view.fragment.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite" />
 </navigation>

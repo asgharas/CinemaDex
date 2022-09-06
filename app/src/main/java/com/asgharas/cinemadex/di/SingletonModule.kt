@@ -1,10 +1,15 @@
 package com.asgharas.cinemadex.di
 
+import android.content.Context
+import androidx.room.Room
 import com.asgharas.cinemadex.model.api.ApiService
+import com.asgharas.cinemadex.model.db.CinemaDao
+import com.asgharas.cinemadex.model.db.CinemaDb
 import com.asgharas.cinemadex.model.repository.CinemaRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -40,7 +45,22 @@ class SingletonModule {
 
     @Provides
     @Singleton
-    fun providesCinemaRepository(apiService: ApiService): CinemaRepository {
-        return CinemaRepository(apiService)
+    fun providesCinemaRepository(apiService: ApiService, cinemaDao: CinemaDao): CinemaRepository =
+        CinemaRepository(apiService, cinemaDao)
+
+
+    @Provides
+    @Singleton
+    fun providesCinemaDb(@ApplicationContext cxt: Context): CinemaDb {
+         return Room.databaseBuilder(
+            cxt,
+            CinemaDb::class.java,
+            "cinema_db"
+        ).build()
     }
+
+    @Provides
+    @Singleton
+    fun providesDao(db: CinemaDb): CinemaDao = db.getDB()
+
 }

@@ -1,4 +1,4 @@
-package com.asgharas.cinemadex.view
+package com.asgharas.cinemadex.view.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,12 +10,16 @@ import com.asgharas.cinemadex.R
 import com.asgharas.cinemadex.databinding.MovieViewBinding
 import com.asgharas.cinemadex.model.data.Tv
 import com.asgharas.cinemadex.other.IMAGE_BASE_URL
+import com.asgharas.cinemadex.view.listeners.LongClickListener
+import com.asgharas.cinemadex.view.listeners.ReachedBottomListener
+import com.asgharas.cinemadex.view.listeners.TvClickListener
 import com.bumptech.glide.Glide
 
 class TvAdapter(
     private val context: Context,
     private val tvClickListener: TvClickListener,
-    private val reachedBottomListener: ReachedBottomListener
+    private val reachedBottomListener: ReachedBottomListener,
+    private val longClickListener: LongClickListener
 ) :
     RecyclerView.Adapter<TvAdapter.TvViewHolder>() {
 
@@ -39,7 +43,7 @@ class TvAdapter(
             oldItem == newItem
     }
 
-    val differ = AsyncListDiffer<Tv>(this, diffUtil)
+    val differ = AsyncListDiffer(this, diffUtil)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvViewHolder {
         val binding = MovieViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -49,6 +53,10 @@ class TvAdapter(
     override fun onBindViewHolder(holder: TvViewHolder, position: Int) {
         holder.binding.rvMoviePoster.setOnClickListener {
             tvClickListener.handleTvClick(differ.currentList[position])
+        }
+        holder.binding.rvMoviePoster.setOnLongClickListener {
+            longClickListener.handleLongClick(differ.currentList[position])
+            return@setOnLongClickListener true
         }
         holder.bind(differ.currentList[position])
         if(position == differ.currentList.size - 1) {

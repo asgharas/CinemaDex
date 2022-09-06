@@ -1,4 +1,4 @@
-package com.asgharas.cinemadex.view
+package com.asgharas.cinemadex.view.fragment
 
 import android.app.Activity
 import android.content.Context
@@ -14,6 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.asgharas.cinemadex.databinding.FragmentSearchBinding
 import com.asgharas.cinemadex.model.data.Movie
 import com.asgharas.cinemadex.model.data.Tv
+import com.asgharas.cinemadex.view.activity.SingleMovieActivity
+import com.asgharas.cinemadex.view.activity.SingleTvActivity
+import com.asgharas.cinemadex.view.adapter.MovieSearchAdapter
+import com.asgharas.cinemadex.view.adapter.TvSearchAdapter
+import com.asgharas.cinemadex.view.listeners.MovieClickListener
+import com.asgharas.cinemadex.view.listeners.TvClickListener
 import com.asgharas.cinemadex.viewmodel.SearchViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
