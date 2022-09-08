@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/baseline_search_black_48dp.xml" value="0.159" />
+        <entry key="app/src/main/res/drawable/ic_favourite.xml" value="0.159" />
         <entry key="app/src/main/res/drawable/rounded_edit_text_bg.xml" value="0.1955" />
         <entry key="app/src/main/res/drawable/rounded_shape.xml" value="0.202" />
         <entry key="app/src/main/res/layout-v30/fragment_favourite.xml" value="0.34322916666666664" />

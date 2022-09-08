@@ -13,16 +13,16 @@ import javax.inject.Inject
 @HiltViewModel
 class TvViewModel @Inject constructor(private val repository: CinemaRepository) : ViewModel() {
 
-    init {
+    val tvShowsList: LiveData<List<Tv>>
+        get() = repository.tvShows
+
+    fun getTv() {
         viewModelScope.launch {
             if(repository.tvShows.value == null || repository.tvShows.value!!.isEmpty()){
                 repository.getDiscoverTv()
             }
         }
     }
-
-    val tvShowsList: LiveData<List<Tv>>
-        get() = repository.tvShows
 
     fun loadNextPage(){
         viewModelScope.launch(Dispatchers.IO) {

@@ -25,16 +25,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <Button
         android:id="@+id/btnSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/baseline_search_black_48dp"
+        android:background="#00000000"
+        app:icon="@drawable/baseline_search_black_48dp"
+        app:iconPadding="0dp"
+        app:iconSize="40dp"
+        app:iconTint="#69F0AE"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tvRecyclerView"
@@ -63,8 +65,8 @@
             android:id="@+id/movieRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="32dp"
             android:text="Movie"
             android:checked="true"/>
 
@@ -72,8 +74,8 @@
             android:id="@+id/tvRadio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="16dp"
             android:text="Tv Show" />
     </RadioGroup>
 

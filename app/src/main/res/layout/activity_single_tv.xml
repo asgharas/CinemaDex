@@ -147,6 +147,7 @@
             app:icon="@drawable/ic_favourite"
             app:iconGravity="top"
             app:iconSize="34dp"
+            app:iconTint="#69F0AE"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ivPoster" />
 
