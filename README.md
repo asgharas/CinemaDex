@@ -3,7 +3,7 @@
 # CinemaDex
 A gorgeous TMDB Android Client with MVVM + Depedency Injection + Retrofit + Room DB + Image Local Caching with Glide
 
-**_DOWNLOAD APK Release HERE:_** https://github.com/asgharas/CinemaDex/releases/download/0.1-pre-release/app-release.apk  
+**_DOWNLOAD APK Release HERE:_** https://github.com/asgharas/CinemaDex/releases/download/v1.0/app-release.apk 
 
 > This app is just for practice of the Android Development Concepts that I have learned. Any improvement is warmly welcome.
 
