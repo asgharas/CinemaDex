@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/76618200/189423194-3e39abb3-274f-40ab-9f69-e4df59608b67.png)
+
 # CinemaDex
 A gorgeous TMDB Android Client with MVVM + Depedency Injection + Retrofit + Room DB + Image Local Caching with Glide
 
