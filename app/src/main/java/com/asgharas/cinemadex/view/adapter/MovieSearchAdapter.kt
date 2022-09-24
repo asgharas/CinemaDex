@@ -9,25 +9,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asgharas.cinemadex.R
 import com.asgharas.cinemadex.databinding.SearchItemBinding
 import com.asgharas.cinemadex.model.data.Movie
-import com.asgharas.cinemadex.other.IMAGE_BASE_URL
-import com.asgharas.cinemadex.view.listeners.MovieClickListener
+import com.asgharas.cinemadex.utils.IMAGE_BASE_URL
 import com.bumptech.glide.Glide
 
-class MovieSearchAdapter(private val context: Context, private val movieClickListener: MovieClickListener) : RecyclerView.Adapter<MovieSearchAdapter.MovieSearchViewHolder>() {
+class MovieSearchAdapter(
+    private val context: Context,
+    private val handleMovieClick: (Movie) -> Unit
+) : RecyclerView.Adapter<MovieSearchAdapter.MovieSearchViewHolder>() {
 
     inner class MovieSearchViewHolder(val binding: SearchItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(movie: Movie) {
             binding.itemName.text = movie.title
             Glide.with(context)
-                .load(IMAGE_BASE_URL+movie.poster_path)
+                .load(IMAGE_BASE_URL + movie.poster_path)
                 .placeholder(R.drawable.template_placeholder)
                 .error(R.drawable.template_placeholder)
                 .into(binding.itemPoster)
         }
     }
 
-    private val diffUtil = object: DiffUtil.ItemCallback<Movie>() {
+    private val diffUtil = object : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem.id == newItem.id
         }
@@ -47,7 +49,7 @@ class MovieSearchAdapter(private val context: Context, private val movieClickLis
     override fun onBindViewHolder(holder: MovieSearchViewHolder, position: Int) {
         holder.bind(differ.currentList[position])
         holder.binding.root.setOnClickListener {
-            movieClickListener.handleMovieClick(differ.currentList[position])
+            handleMovieClick(differ.currentList[position])
         }
     }
 

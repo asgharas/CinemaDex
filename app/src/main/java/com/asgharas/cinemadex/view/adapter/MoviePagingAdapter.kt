@@ -1,10 +1,9 @@
 package com.asgharas.cinemadex.view.adapter
 
 import android.content.Context
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.asgharas.cinemadex.R
@@ -13,16 +12,16 @@ import com.asgharas.cinemadex.model.data.Movie
 import com.asgharas.cinemadex.utils.IMAGE_BASE_URL
 import com.bumptech.glide.Glide
 
-class MovieAdapter(
+class MoviePagingAdapter(
     private val context: Context,
-    private val handleMovieClick: (Movie) -> Unit,
-    private val onReachedBottom: () -> Unit,
-    private val handleLongClick: (Parcelable) -> Unit
-) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+    private val handleMovieClick: (Movie) -> Unit
+) :
+    PagingDataAdapter<Movie, MoviePagingAdapter.MovieViewHolder>(
+        COMPARATOR
+    ) {
 
     inner class MovieViewHolder(val binding: MovieViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(movie: Movie) {
             Glide.with(context)
                 .load(IMAGE_BASE_URL + movie.poster_path)
@@ -33,15 +32,15 @@ class MovieAdapter(
         }
     }
 
-    private val diffUtil = object : DiffUtil.ItemCallback<Movie>() {
-        override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean =
-            oldItem.id == newItem.id
+    companion object {
+        private val COMPARATOR = object : DiffUtil.ItemCallback<Movie>() {
+            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+                oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean =
-            oldItem == newItem
+            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean =
+                oldItem == newItem
+        }
     }
-
-    val differ = AsyncListDiffer(this, diffUtil)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val binding =
@@ -51,19 +50,15 @@ class MovieAdapter(
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.binding.rvMoviePoster.setOnClickListener {
-            handleMovieClick(differ.currentList[position])
+            val item = getItem(position)
+            if(item != null){
+                handleMovieClick(item)
+            }
         }
-        holder.binding.rvMoviePoster.setOnLongClickListener {
-            handleLongClick(differ.currentList[position])
-            return@setOnLongClickListener true
-        }
-        holder.bind(differ.currentList[position])
 
-        if(position == differ.currentList.size - 1){
-            onReachedBottom()
+        val item = getItem(position)
+        if (item != null) {
+            holder.bind(item)
         }
     }
-
-    override fun getItemCount(): Int =
-        differ.currentList.size
 }

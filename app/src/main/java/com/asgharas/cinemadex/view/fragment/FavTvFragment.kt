@@ -11,16 +11,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.asgharas.cinemadex.databinding.FragmentFavTvBinding
 import com.asgharas.cinemadex.model.data.Tv
 import com.asgharas.cinemadex.view.adapter.TvAdapter
-import com.asgharas.cinemadex.view.listeners.LongClickListener
-import com.asgharas.cinemadex.view.listeners.ReachedBottomListener
-import com.asgharas.cinemadex.view.listeners.TvClickListener
 import com.asgharas.cinemadex.viewmodel.FavouriteViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FavTvFragment : Fragment(), TvClickListener, ReachedBottomListener, LongClickListener {
+class FavTvFragment : Fragment() {
 
     private lateinit var binding: FragmentFavTvBinding
     private lateinit var rvAdapter: TvAdapter
@@ -31,7 +28,7 @@ class FavTvFragment : Fragment(), TvClickListener, ReachedBottomListener, LongCl
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFavTvBinding.inflate(inflater, container, false)
-        rvAdapter = TvAdapter(requireContext(), this, this, this)
+        rvAdapter = TvAdapter(requireContext(), ::handleTvClick, ::onReachedBottom, ::handleLongClick)
         favViewModel = ViewModelProvider(this)[FavouriteViewModel::class.java]
         favViewModel.getTvFavourites()
 
@@ -47,15 +44,15 @@ class FavTvFragment : Fragment(), TvClickListener, ReachedBottomListener, LongCl
         return binding.root
     }
 
-    override fun onReachedBottom() {
+    private fun onReachedBottom() {
         // do nothing
     }
 
-    override fun handleTvClick(tv: Tv) {
+    private fun handleTvClick(tv: Tv) {
         //do nothing
     }
 
-    override fun handleLongClick(cinemaItem: Parcelable) {
+    private fun handleLongClick(cinemaItem: Parcelable) {
         val tvShow = cinemaItem as Tv
 
         MaterialAlertDialogBuilder(requireContext())

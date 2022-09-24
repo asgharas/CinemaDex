@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.asgharas.cinemadex.R
 import com.asgharas.cinemadex.databinding.ActivitySingleMovieBinding
 import com.asgharas.cinemadex.model.data.Movie
-import com.asgharas.cinemadex.other.IMAGE_BASE_URL
+import com.asgharas.cinemadex.utils.IMAGE_BASE_URL
 import com.asgharas.cinemadex.viewmodel.FavouriteViewModel
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
@@ -22,7 +22,7 @@ class SingleMovieActivity : AppCompatActivity() {
         binding = ActivitySingleMovieBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val favouriteViewModel = ViewModelProvider(this)[FavouriteViewModel::class.java]
-        val movie: Movie? = intent.getParcelableExtra("movie_extra")
+        @Suppress("DEPRECATION") val movie: Movie? = intent.getParcelableExtra("movie_extra")
         if(movie != null) {
             setupUi(movie)
             binding.btnFavourite.setOnClickListener {

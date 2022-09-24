@@ -14,3 +14,7 @@
 .cxx
 local.properties
 #/app/src/main/java/com/asgharas/cinemadex/other/Constants.kt
+/app/src/main/cpp/*
+/app/release/app-release.apk
+/app/release/output-metadata.json
+/app/schemas/com.asgharas.cinemadex.model.db.CinemaDb/1.json

@@ -2,87 +2,137 @@ package com.asgharas.cinemadex.model.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.liveData
+import com.asgharas.cinemadex.Keys
 import com.asgharas.cinemadex.model.api.ApiService
+import com.asgharas.cinemadex.model.data.DiscoverMovieResponse
+import com.asgharas.cinemadex.model.data.DiscoverTVResponse
 import com.asgharas.cinemadex.model.data.Movie
 import com.asgharas.cinemadex.model.data.Tv
 import com.asgharas.cinemadex.model.db.CinemaDao
-import com.asgharas.cinemadex.other.API_KEY
+import com.asgharas.cinemadex.paging.MoviePagingSource
+import com.asgharas.cinemadex.paging.TvPagingSource
+import com.asgharas.cinemadex.utils.network.NetworkResult
+import retrofit2.Response
 import javax.inject.Inject
 
 class CinemaRepository @Inject constructor(
     private val apiService: ApiService,
     private val cinemaDao: CinemaDao
 ) {
-    private var page: Int = 1
 
-    private val moviesLiveData = MutableLiveData<List<Movie>>()
-    private val tvLiveData = MutableLiveData<List<Tv>>()
+    private val moviesLiveData = MutableLiveData<NetworkResult<DiscoverMovieResponse>>()
+    private val tvLiveData = MutableLiveData<NetworkResult<DiscoverTVResponse>>()
 
-    private val moviesSearchLiveData = MutableLiveData<List<Movie>>()
-    private val tvSearchLiveData = MutableLiveData<List<Tv>>()
+    private val moviesSearchLiveData = MutableLiveData<NetworkResult<DiscoverMovieResponse>>()
+    private val tvSearchLiveData = MutableLiveData<NetworkResult<DiscoverTVResponse>>()
 
     private val movieFavouriteData = MutableLiveData<List<Movie>>()
     private val tvFavouriteData = MutableLiveData<List<Tv>>()
 
-    val movies: LiveData<List<Movie>>
-        get() = moviesLiveData
-    val tvShows: LiveData<List<Tv>>
-        get() = tvLiveData
+//    val movies: LiveData<NetworkResult<DiscoverMovieResponse>>
+//        get() = moviesLiveData
+//    val tvShows: LiveData<NetworkResult<DiscoverTVResponse>>
+//        get() = tvLiveData
 
-    val moviesSearch: LiveData<List<Movie>>
+    val moviesSearch: LiveData<NetworkResult<DiscoverMovieResponse>>
         get() = moviesSearchLiveData
-    val tvShowsSearch: LiveData<List<Tv>>
+    val tvShowsSearch: LiveData<NetworkResult<DiscoverTVResponse>>
         get() = tvSearchLiveData
 
-    val movieFavourites : LiveData<List<Movie>>
-    get() = movieFavouriteData
+    val movieFavourites: LiveData<List<Movie>>
+        get() = movieFavouriteData
 
-    val tvFavourites : LiveData<List<Tv>>
-    get() = tvFavouriteData
+    val tvFavourites: LiveData<List<Tv>>
+        get() = tvFavouriteData
 
-    suspend fun getDiscoverMovies() {
-        val result = apiService.getDiscoverMovies(API_KEY, page)
-        if (result.body() != null && result.isSuccessful) {
-            moviesLiveData.postValue(result.body()!!.results.toMutableList())
+    fun getDiscoverMovies() = Pager(
+        config = PagingConfig(pageSize = 20, maxSize = 100),
+        pagingSourceFactory = { MoviePagingSource(apiService) }
+    ).liveData
+
+ fun getDiscoverTv() = Pager(
+        config = PagingConfig(pageSize = 20, maxSize = 100),
+        pagingSourceFactory = { TvPagingSource(apiService) }
+    ).liveData
+
+
+//    private fun handleMovieResponse(
+//        response: Response<DiscoverMovieResponse>
+//    ) {
+//        if (response.isSuccessful && response.body() != null) {
+//            if (moviesLiveData.value?.data?.results?.isNotEmpty() == true) {
+//                Log.d("TESTRR", "handleMovieResponse: not empty")
+//                moviesLiveData.postValue(NetworkResult.Success(DiscoverMovieResponse(results = moviesLiveData.value?.data?.results!! + response.body()!!.results)))
+//            } else {
+//                moviesLiveData.postValue(NetworkResult.Success(response.body()!!))
+//                Log.d("TESTRR", "handleMovieResponse: empty")
+//            }
+//
+//        } else if (response.errorBody() != null) {
+//            moviesLiveData.postValue(NetworkResult.Error("Something Went Wrong"))
+//        } else {
+//            moviesLiveData.postValue(NetworkResult.Loading())
+//        }
+//    }
+//
+//    private fun handleTvResponse(
+//        response: Response<DiscoverTVResponse>
+//    ) {
+//        if (response.isSuccessful && response.body() != null) {
+//            if (tvLiveData.value?.data?.results?.isNotEmpty() == true) {
+//                tvLiveData.postValue(NetworkResult.Success(DiscoverTVResponse(results = tvLiveData.value?.data?.results!! + response.body()!!.results)))
+//            } else tvLiveData.postValue(NetworkResult.Success(response.body()!!))
+//
+//        } else if (response.errorBody() != null) {
+//            tvLiveData.postValue(NetworkResult.Error("Something Went Wrong"))
+//        } else {
+//            tvLiveData.postValue(NetworkResult.Loading())
+//        }
+//    }
+    private fun handleMovieSearchResponse(
+        response: Response<DiscoverMovieResponse>
+    ) {
+        if (response.isSuccessful && response.body() != null) {
+            if (moviesSearchLiveData.value?.data?.results?.isNotEmpty() == true) {
+                moviesSearchLiveData.postValue(NetworkResult.Success(DiscoverMovieResponse(results = moviesSearchLiveData.value?.data?.results!! + response.body()!!.results)))
+            } else moviesSearchLiveData.postValue(NetworkResult.Success(response.body()!!))
+
+        } else if (response.errorBody() != null) {
+            moviesSearchLiveData.postValue(NetworkResult.Error("Something Went Wrong"))
+        } else {
+            moviesSearchLiveData.postValue(NetworkResult.Loading())
         }
     }
 
-    suspend fun getDiscoverTv() {
-        val result = apiService.getDiscoverTv(API_KEY, page)
-        if (result.body() != null && result.isSuccessful) {
-            tvLiveData.postValue(result.body()!!.results)
-        }
-    }
+    private fun handleTvSearchResponse(
+        response: Response<DiscoverTVResponse>
+    ) {
+        if (response.isSuccessful && response.body() != null) {
+            if (tvSearchLiveData.value?.data?.results?.isNotEmpty() == true) {
+                tvSearchLiveData.postValue(NetworkResult.Success(DiscoverTVResponse(results = tvSearchLiveData.value?.data?.results!! + response.body()!!.results)))
+            } else tvSearchLiveData.postValue(NetworkResult.Success(response.body()!!))
 
-    suspend fun loadNextMoviePage() {
-        val result = apiService.getDiscoverMovies(API_KEY, ++page)
-        if (result.body() != null && result.isSuccessful && moviesLiveData.value != null) {
-            moviesLiveData.postValue(moviesLiveData.value!! + result.body()!!.results)
-        }
-    }
-
-    suspend fun loadNextTvPage() {
-        val result = apiService.getDiscoverTv(API_KEY, ++page)
-        if (result.body() != null && result.isSuccessful && tvLiveData.value != null) {
-            tvLiveData.postValue(tvLiveData.value!! + result.body()!!.results)
+        } else if (response.errorBody() != null) {
+            tvSearchLiveData.postValue(NetworkResult.Error("Something Went Wrong"))
+        } else {
+            tvSearchLiveData.postValue(NetworkResult.Loading())
         }
     }
 
     suspend fun searchTv(queryString: String) {
-        val result = apiService.searchTv(API_KEY, queryString)
-        if (result.body() != null && result.isSuccessful) {
-            tvSearchLiveData.postValue(result.body()!!.results)
-        }
+        val response = apiService.searchTv(Keys.apiKey(), queryString)
+        handleTvSearchResponse(response)
     }
 
     suspend fun searchMovie(queryString: String) {
-        val result = apiService.searchMovie(API_KEY, queryString)
-        if (result.body() != null && result.isSuccessful) {
-            moviesSearchLiveData.postValue(result.body()!!.results)
-        }
+        val response = apiService.searchMovie(Keys.apiKey(), queryString)
+        handleMovieSearchResponse(response)
     }
 
-    suspend fun addMovieFavourite(movie: Movie){
+    suspend fun addMovieFavourite(movie: Movie) {
         cinemaDao.insertMovie(movie)
         getMovieFavourites()
     }
@@ -92,7 +142,7 @@ class CinemaRepository @Inject constructor(
         movieFavouriteData.postValue(result)
     }
 
-    suspend fun addTvFavourite(tv: Tv){
+    suspend fun addTvFavourite(tv: Tv) {
         cinemaDao.insertTv(tv)
         getTvFavourites()
     }

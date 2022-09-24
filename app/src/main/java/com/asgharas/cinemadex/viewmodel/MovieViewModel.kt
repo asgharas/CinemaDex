@@ -1,33 +1,15 @@
 package com.asgharas.cinemadex.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asgharas.cinemadex.model.data.Movie
+import androidx.paging.cachedIn
 import com.asgharas.cinemadex.model.repository.CinemaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MovieViewModel @Inject constructor(private val repository: CinemaRepository) : ViewModel() {
+class MovieViewModel @Inject constructor(repository: CinemaRepository) : ViewModel() {
 
-    val moviesList: LiveData<List<Movie>>
-    get() = repository.movies
+    val moviesList = repository.getDiscoverMovies().cachedIn(viewModelScope)
 
-    fun getMovie() {
-        viewModelScope.launch {
-            if(repository.movies.value == null || repository.tvShows.value!!.isEmpty()){
-                repository.getDiscoverMovies()
-            }
-        }
-    }
-
-    fun loadNextPage(){
-        viewModelScope.launch(Dispatchers.IO) {
-            Thread.sleep(3000)
-            repository.loadNextMoviePage()
-        }
-    }
 }

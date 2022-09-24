@@ -11,16 +11,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.asgharas.cinemadex.databinding.FragmentFavMovieBinding
 import com.asgharas.cinemadex.model.data.Movie
 import com.asgharas.cinemadex.view.adapter.MovieAdapter
-import com.asgharas.cinemadex.view.listeners.LongClickListener
-import com.asgharas.cinemadex.view.listeners.MovieClickListener
-import com.asgharas.cinemadex.view.listeners.ReachedBottomListener
 import com.asgharas.cinemadex.viewmodel.FavouriteViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FavMovieFragment : Fragment(), MovieClickListener, ReachedBottomListener, LongClickListener {
+class FavMovieFragment : Fragment() {
 
     private lateinit var binding: FragmentFavMovieBinding
     private lateinit var favViewModel: FavouriteViewModel
@@ -30,7 +27,7 @@ class FavMovieFragment : Fragment(), MovieClickListener, ReachedBottomListener, 
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFavMovieBinding.inflate(inflater, container, false)
-        val rvAdapter = MovieAdapter(requireContext(), this, this, this)
+        val rvAdapter = MovieAdapter(requireContext(), ::handleMovieClick, ::onReachedBottom, ::handleLongClick)
         favViewModel = ViewModelProvider(this)[FavouriteViewModel::class.java]
         favViewModel.getMovieFavourites()
 
@@ -45,15 +42,15 @@ class FavMovieFragment : Fragment(), MovieClickListener, ReachedBottomListener, 
         return binding.root
     }
 
-    override fun handleMovieClick(movie: Movie) {
+    private fun handleMovieClick(movie: Movie) {
         // do nothing
     }
 
-    override fun onReachedBottom() {
+    private fun onReachedBottom() {
         //do nothing
     }
 
-    override fun handleLongClick(cinemaItem: Parcelable) {
+    private fun handleLongClick(cinemaItem: Parcelable) {
         val movie = cinemaItem as Movie
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Remove Favourite")

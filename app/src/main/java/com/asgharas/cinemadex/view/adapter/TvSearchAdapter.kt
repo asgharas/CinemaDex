@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.asgharas.cinemadex.R
 import com.asgharas.cinemadex.databinding.SearchItemBinding
 import com.asgharas.cinemadex.model.data.Tv
-import com.asgharas.cinemadex.other.IMAGE_BASE_URL
-import com.asgharas.cinemadex.view.listeners.TvClickListener
+import com.asgharas.cinemadex.utils.IMAGE_BASE_URL
 import com.bumptech.glide.Glide
 
-class TvSearchAdapter(private val context: Context, private val tvClickListener: TvClickListener) : RecyclerView.Adapter<TvSearchAdapter.TvSearchViewHolder>() {
+class TvSearchAdapter(
+    private val context: Context,
+    private val handleTvClick: (Tv) -> Unit
+) : RecyclerView.Adapter<TvSearchAdapter.TvSearchViewHolder>() {
 
     inner class TvSearchViewHolder(val binding: SearchItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -27,7 +29,7 @@ class TvSearchAdapter(private val context: Context, private val tvClickListener:
         }
     }
 
-    private val diffUtil = object: DiffUtil.ItemCallback<Tv>() {
+    private val diffUtil = object : DiffUtil.ItemCallback<Tv>() {
         override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean {
             return oldItem.id == newItem.id
         }
@@ -47,7 +49,7 @@ class TvSearchAdapter(private val context: Context, private val tvClickListener:
     override fun onBindViewHolder(holder: TvSearchViewHolder, position: Int) {
         holder.bind(differ.currentList[position])
         holder.binding.root.setOnClickListener {
-            tvClickListener.handleTvClick(differ.currentList[position])
+            handleTvClick(differ.currentList[position])
         }
     }
 
