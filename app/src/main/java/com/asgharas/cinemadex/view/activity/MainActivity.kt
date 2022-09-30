@@ -9,7 +9,6 @@ import com.asgharas.cinemadex.R
 import com.asgharas.cinemadex.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-const val TAG: String = "ASGHARAS"
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

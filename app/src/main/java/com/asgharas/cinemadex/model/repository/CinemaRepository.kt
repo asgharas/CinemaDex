@@ -2,6 +2,7 @@ package com.asgharas.cinemadex.model.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
@@ -9,89 +10,53 @@ import com.asgharas.cinemadex.Keys
 import com.asgharas.cinemadex.model.api.ApiService
 import com.asgharas.cinemadex.model.data.DiscoverMovieResponse
 import com.asgharas.cinemadex.model.data.DiscoverTVResponse
-import com.asgharas.cinemadex.model.data.Movie
-import com.asgharas.cinemadex.model.data.Tv
-import com.asgharas.cinemadex.model.db.CinemaDao
-import com.asgharas.cinemadex.paging.MoviePagingSource
-import com.asgharas.cinemadex.paging.TvPagingSource
+import com.asgharas.cinemadex.model.data.FavMovie
+import com.asgharas.cinemadex.model.data.FavTv
+import com.asgharas.cinemadex.model.db.CinemaDb
+import com.asgharas.cinemadex.paging.MovieRemoteMediator
+import com.asgharas.cinemadex.paging.TvRemoteMediator
 import com.asgharas.cinemadex.utils.network.NetworkResult
 import retrofit2.Response
 import javax.inject.Inject
 
+@OptIn(ExperimentalPagingApi::class)
 class CinemaRepository @Inject constructor(
     private val apiService: ApiService,
-    private val cinemaDao: CinemaDao
+    private val cinemaDb: CinemaDb
 ) {
-
-    private val moviesLiveData = MutableLiveData<NetworkResult<DiscoverMovieResponse>>()
-    private val tvLiveData = MutableLiveData<NetworkResult<DiscoverTVResponse>>()
 
     private val moviesSearchLiveData = MutableLiveData<NetworkResult<DiscoverMovieResponse>>()
     private val tvSearchLiveData = MutableLiveData<NetworkResult<DiscoverTVResponse>>()
 
-    private val movieFavouriteData = MutableLiveData<List<Movie>>()
-    private val tvFavouriteData = MutableLiveData<List<Tv>>()
-
-//    val movies: LiveData<NetworkResult<DiscoverMovieResponse>>
-//        get() = moviesLiveData
-//    val tvShows: LiveData<NetworkResult<DiscoverTVResponse>>
-//        get() = tvLiveData
+    private val movieFavouriteData = MutableLiveData<List<FavMovie>>()
+    private val tvFavouriteData = MutableLiveData<List<FavTv>>()
 
     val moviesSearch: LiveData<NetworkResult<DiscoverMovieResponse>>
         get() = moviesSearchLiveData
     val tvShowsSearch: LiveData<NetworkResult<DiscoverTVResponse>>
         get() = tvSearchLiveData
 
-    val movieFavourites: LiveData<List<Movie>>
+    val movieFavourites: LiveData<List<FavMovie>>
         get() = movieFavouriteData
 
-    val tvFavourites: LiveData<List<Tv>>
+    val tvFavourites: LiveData<List<FavTv>>
         get() = tvFavouriteData
 
     fun getDiscoverMovies() = Pager(
         config = PagingConfig(pageSize = 20, maxSize = 100),
-        pagingSourceFactory = { MoviePagingSource(apiService) }
+        remoteMediator = MovieRemoteMediator(apiService, cinemaDb),
+        pagingSourceFactory = { cinemaDb.getDB().getMovies() }
+//        pagingSourceFactory = { MoviePagingSource(apiService) }
     ).liveData
 
  fun getDiscoverTv() = Pager(
         config = PagingConfig(pageSize = 20, maxSize = 100),
-        pagingSourceFactory = { TvPagingSource(apiService) }
+     remoteMediator = TvRemoteMediator(apiService, cinemaDb),
+     pagingSourceFactory = { cinemaDb.getDB().getTvShows() }
+//     pagingSourceFactory = { TvPagingSource(apiService) }
     ).liveData
 
 
-//    private fun handleMovieResponse(
-//        response: Response<DiscoverMovieResponse>
-//    ) {
-//        if (response.isSuccessful && response.body() != null) {
-//            if (moviesLiveData.value?.data?.results?.isNotEmpty() == true) {
-//                Log.d("TESTRR", "handleMovieResponse: not empty")
-//                moviesLiveData.postValue(NetworkResult.Success(DiscoverMovieResponse(results = moviesLiveData.value?.data?.results!! + response.body()!!.results)))
-//            } else {
-//                moviesLiveData.postValue(NetworkResult.Success(response.body()!!))
-//                Log.d("TESTRR", "handleMovieResponse: empty")
-//            }
-//
-//        } else if (response.errorBody() != null) {
-//            moviesLiveData.postValue(NetworkResult.Error("Something Went Wrong"))
-//        } else {
-//            moviesLiveData.postValue(NetworkResult.Loading())
-//        }
-//    }
-//
-//    private fun handleTvResponse(
-//        response: Response<DiscoverTVResponse>
-//    ) {
-//        if (response.isSuccessful && response.body() != null) {
-//            if (tvLiveData.value?.data?.results?.isNotEmpty() == true) {
-//                tvLiveData.postValue(NetworkResult.Success(DiscoverTVResponse(results = tvLiveData.value?.data?.results!! + response.body()!!.results)))
-//            } else tvLiveData.postValue(NetworkResult.Success(response.body()!!))
-//
-//        } else if (response.errorBody() != null) {
-//            tvLiveData.postValue(NetworkResult.Error("Something Went Wrong"))
-//        } else {
-//            tvLiveData.postValue(NetworkResult.Loading())
-//        }
-//    }
     private fun handleMovieSearchResponse(
         response: Response<DiscoverMovieResponse>
     ) {
@@ -132,33 +97,33 @@ class CinemaRepository @Inject constructor(
         handleMovieSearchResponse(response)
     }
 
-    suspend fun addMovieFavourite(movie: Movie) {
-        cinemaDao.insertMovie(movie)
+    suspend fun addMovieFavourite(favMovie: FavMovie) {
+        cinemaDb.getDB().insertFavMovie(favMovie)
         getMovieFavourites()
     }
 
     suspend fun getMovieFavourites() {
-        val result = cinemaDao.getMovies()
+        val result = cinemaDb.getDB().getFavMovies()
         movieFavouriteData.postValue(result)
     }
 
-    suspend fun addTvFavourite(tv: Tv) {
-        cinemaDao.insertTv(tv)
+    suspend fun addTvFavourite(favTv: FavTv) {
+        cinemaDb.getDB().insertFavTv(favTv)
         getTvFavourites()
     }
 
     suspend fun getTvFavourites() {
-        val result = cinemaDao.getTvShows()
+        val result = cinemaDb.getDB().getFavTvShows()
         tvFavouriteData.postValue(result)
     }
 
-    suspend fun removeTvFavourite(tv: Tv) {
-        cinemaDao.deleteTvFavourite(tv)
+    suspend fun removeTvFavourite(favTv: FavTv) {
+        cinemaDb.getDB().deleteFavTv(favTv)
         getTvFavourites()
     }
 
-    suspend fun removeMovieFavourite(movie: Movie) {
-        cinemaDao.deleteMovieFavourite(movie)
+    suspend fun removeMovieFavourite(favMovie: FavMovie) {
+        cinemaDb.getDB().deleteFavMovie(favMovie)
         getMovieFavourites()
     }
 }

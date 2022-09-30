@@ -9,21 +9,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.asgharas.cinemadex.R
 import com.asgharas.cinemadex.databinding.MovieViewBinding
-import com.asgharas.cinemadex.model.data.Tv
+import com.asgharas.cinemadex.model.data.FavTv
 import com.asgharas.cinemadex.utils.IMAGE_BASE_URL
 import com.bumptech.glide.Glide
 
 class TvAdapter(
     private val context: Context,
-    private val handleTvClick: (Tv) -> Unit,
-    private val onReachedBottom: () -> Unit,
     private val handleLongClick: (Parcelable) -> Unit
 ) :
     RecyclerView.Adapter<TvAdapter.TvViewHolder>() {
 
     inner class TvViewHolder(val binding: MovieViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(tv: Tv) {
+        fun bind(tv: FavTv) {
             Glide.with(context)
                 .load(IMAGE_BASE_URL + tv.poster_path)
                 .placeholder(R.drawable.template_placeholder)
@@ -33,11 +31,11 @@ class TvAdapter(
         }
     }
 
-    private val diffUtil = object : DiffUtil.ItemCallback<Tv>() {
-        override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean =
+    private val diffUtil = object : DiffUtil.ItemCallback<FavTv>() {
+        override fun areItemsTheSame(oldItem: FavTv, newItem: FavTv): Boolean =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: Tv, newItem: Tv): Boolean =
+        override fun areContentsTheSame(oldItem: FavTv, newItem: FavTv): Boolean =
             oldItem == newItem
     }
 
@@ -49,17 +47,11 @@ class TvAdapter(
     }
 
     override fun onBindViewHolder(holder: TvViewHolder, position: Int) {
-        holder.binding.rvMoviePoster.setOnClickListener {
-            handleTvClick(differ.currentList[position])
-        }
         holder.binding.rvMoviePoster.setOnLongClickListener {
             handleLongClick(differ.currentList[position])
             return@setOnLongClickListener true
         }
         holder.bind(differ.currentList[position])
-        if(position == differ.currentList.size - 1) {
-            onReachedBottom()
-        }
     }
 
     override fun getItemCount(): Int =

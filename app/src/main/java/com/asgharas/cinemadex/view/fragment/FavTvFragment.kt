@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.asgharas.cinemadex.databinding.FragmentFavTvBinding
-import com.asgharas.cinemadex.model.data.Tv
+import com.asgharas.cinemadex.model.data.FavTv
 import com.asgharas.cinemadex.view.adapter.TvAdapter
 import com.asgharas.cinemadex.viewmodel.FavouriteViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -28,7 +28,7 @@ class FavTvFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFavTvBinding.inflate(inflater, container, false)
-        rvAdapter = TvAdapter(requireContext(), ::handleTvClick, ::onReachedBottom, ::handleLongClick)
+        rvAdapter = TvAdapter(requireContext(), ::handleLongClick)
         favViewModel = ViewModelProvider(this)[FavouriteViewModel::class.java]
         favViewModel.getTvFavourites()
 
@@ -37,23 +37,15 @@ class FavTvFragment : Fragment() {
             this.layoutManager = GridLayoutManager(requireContext(), 3)
         }
         favViewModel.tvFavourites.observe(this.viewLifecycleOwner) {
-//            Log.d("TSTR", "onCreateView: ${it.size}")
             rvAdapter.differ.submitList(it)
         }
 
         return binding.root
     }
 
-    private fun onReachedBottom() {
-        // do nothing
-    }
-
-    private fun handleTvClick(tv: Tv) {
-        //do nothing
-    }
 
     private fun handleLongClick(cinemaItem: Parcelable) {
-        val tvShow = cinemaItem as Tv
+        val tvShow = cinemaItem as FavTv
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Remove Favourite")

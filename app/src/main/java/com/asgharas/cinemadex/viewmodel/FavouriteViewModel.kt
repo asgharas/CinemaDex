@@ -3,8 +3,8 @@ package com.asgharas.cinemadex.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asgharas.cinemadex.model.data.Movie
-import com.asgharas.cinemadex.model.data.Tv
+import com.asgharas.cinemadex.model.data.FavMovie
+import com.asgharas.cinemadex.model.data.FavTv
 import com.asgharas.cinemadex.model.repository.CinemaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,10 +15,10 @@ import javax.inject.Inject
 class FavouriteViewModel @Inject constructor(private val cinemaRepository: CinemaRepository) :
     ViewModel() {
 
-    val tvFavourites: LiveData<List<Tv>>
+    val tvFavourites: LiveData<List<FavTv>>
         get() = cinemaRepository.tvFavourites
 
-    val movieFavourites: LiveData<List<Movie>>
+    val movieFavourites: LiveData<List<FavMovie>>
         get() = cinemaRepository.movieFavourites
 
 
@@ -34,27 +34,27 @@ class FavouriteViewModel @Inject constructor(private val cinemaRepository: Cinem
         }
     }
 
-    fun addTvFavourite(tv: Tv) {
+    fun addTvFavourite(favTv: FavTv) {
         viewModelScope.launch(Dispatchers.IO) {
-            cinemaRepository.addTvFavourite(tv)
+            cinemaRepository.addTvFavourite(favTv)
         }
     }
 
-    fun addMovieFavourite(movie: Movie) {
+    fun addMovieFavourite(favMovie: FavMovie) {
         viewModelScope.launch(Dispatchers.IO) {
-            cinemaRepository.addMovieFavourite(movie)
+            cinemaRepository.addMovieFavourite(favMovie)
         }
     }
 
-    fun removeTvFavourite(tv: Tv) {
+    fun removeTvFavourite(favTv: FavTv) {
         viewModelScope.launch(Dispatchers.IO) {
-            cinemaRepository.removeTvFavourite(tv)
+            cinemaRepository.removeTvFavourite(favTv)
         }
     }
 
-    fun removeMovieFavourite(movie: Movie) {
+    fun removeMovieFavourite(favMovie: FavMovie) {
         viewModelScope.launch(Dispatchers.IO) {
-            cinemaRepository.removeMovieFavourite(movie)
+            cinemaRepository.removeMovieFavourite(favMovie)
         }
     }
 }

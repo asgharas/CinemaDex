@@ -4,4 +4,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="true_detective">True Detective</string>
     <string name="movies">Movies</string>
+    <string name="error_occurred">Error occurred</string>
 </resources>

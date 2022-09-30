@@ -2,11 +2,13 @@ package com.asgharas.cinemadex.model.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.asgharas.cinemadex.model.data.Movie
-import com.asgharas.cinemadex.model.data.Tv
+import com.asgharas.cinemadex.model.data.*
 
-@Database(entities = [Tv::class, Movie::class], version = 1)
-abstract class CinemaDb: RoomDatabase() {
+@Database(
+    entities = [Tv::class, Movie::class, FavTv::class, FavMovie::class, MovieRemoteKey::class, TvRemoteKey::class],
+    version = 3
+)
+abstract class CinemaDb : RoomDatabase() {
 
     abstract fun getDB(): CinemaDao
 

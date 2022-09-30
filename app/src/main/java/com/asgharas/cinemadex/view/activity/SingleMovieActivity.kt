@@ -26,7 +26,7 @@ class SingleMovieActivity : AppCompatActivity() {
         if(movie != null) {
             setupUi(movie)
             binding.btnFavourite.setOnClickListener {
-                favouriteViewModel.addMovieFavourite(movie)
+                favouriteViewModel.addMovieFavourite(movie.getFavMovie())
                 Snackbar.make(binding.root, "Added to favourites", Snackbar.LENGTH_SHORT).show()
             }
         }

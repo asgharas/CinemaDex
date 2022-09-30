@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.asgharas.cinemadex.databinding.FragmentFavMovieBinding
-import com.asgharas.cinemadex.model.data.Movie
+import com.asgharas.cinemadex.model.data.FavMovie
 import com.asgharas.cinemadex.view.adapter.MovieAdapter
 import com.asgharas.cinemadex.viewmodel.FavouriteViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -27,7 +27,7 @@ class FavMovieFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFavMovieBinding.inflate(inflater, container, false)
-        val rvAdapter = MovieAdapter(requireContext(), ::handleMovieClick, ::onReachedBottom, ::handleLongClick)
+        val rvAdapter = MovieAdapter(requireContext(), ::handleLongClick)
         favViewModel = ViewModelProvider(this)[FavouriteViewModel::class.java]
         favViewModel.getMovieFavourites()
 
@@ -42,16 +42,9 @@ class FavMovieFragment : Fragment() {
         return binding.root
     }
 
-    private fun handleMovieClick(movie: Movie) {
-        // do nothing
-    }
-
-    private fun onReachedBottom() {
-        //do nothing
-    }
 
     private fun handleLongClick(cinemaItem: Parcelable) {
-        val movie = cinemaItem as Movie
+        val movie = cinemaItem as FavMovie
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Remove Favourite")
             .setMessage("Do you want to remove ${movie.title} from Favourites?")

@@ -31,7 +31,7 @@ class SingleTvActivity : AppCompatActivity() {
         if(tvShow != null) {
             setupUi(tvShow = tvShow)
             binding.btnFavourite.setOnClickListener {
-                favouriteViewModel.addTvFavourite(tvShow)
+                favouriteViewModel.addTvFavourite(tvShow.getFavTv())
                 Snackbar.make(binding.root, "Added to favourites", Snackbar.LENGTH_SHORT).show()
             }
         }

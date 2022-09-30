@@ -6,35 +6,31 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "Movie")
-data class Movie(
+@Entity(tableName = "FavTv")
+data class FavTv(
     @PrimaryKey(autoGenerate = false)
     val id: Int,
-    val adult: Boolean,
     val backdrop_path: String,
+    val first_air_date: String,
+    val name: String,
     val original_language: String,
-    val original_title: String,
+    val original_name: String,
     val overview: String,
     val popularity: Double,
     val poster_path: String,
-    val release_date: String,
-    val title: String,
-    val video: Boolean,
     val vote_average: Double,
     val vote_count: Int
 ) : Parcelable {
-    fun getFavMovie() = FavMovie(
+    fun getTv() = Tv(
         id,
-        adult,
         backdrop_path,
+        first_air_date,
+        name,
         original_language,
-        original_title,
+        original_name,
         overview,
         popularity,
         poster_path,
-        release_date,
-        title,
-        video,
         vote_average,
         vote_count
     )

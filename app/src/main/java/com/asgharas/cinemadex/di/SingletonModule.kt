@@ -46,10 +46,9 @@ class SingletonModule {
     @Singleton
     fun providesCinemaRepository(
         apiService: ApiService,
-        cinemaDao: CinemaDao,
-        @ApplicationContext context: Context
+        cinemaDb: CinemaDb
     ): CinemaRepository =
-        CinemaRepository(apiService, cinemaDao)
+        CinemaRepository(apiService, cinemaDb)
 
 
     @Provides
@@ -59,7 +58,9 @@ class SingletonModule {
             cxt,
             CinemaDb::class.java,
             "cinema_db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

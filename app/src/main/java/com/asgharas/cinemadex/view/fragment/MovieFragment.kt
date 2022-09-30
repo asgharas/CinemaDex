@@ -2,6 +2,7 @@ package com.asgharas.cinemadex.view.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.asgharas.cinemadex.databinding.FragmentMovieBinding
 import com.asgharas.cinemadex.model.data.Movie
+import com.asgharas.cinemadex.paging.LoaderAdapter
 import com.asgharas.cinemadex.view.activity.SingleMovieActivity
 import com.asgharas.cinemadex.view.adapter.MoviePagingAdapter
 import com.asgharas.cinemadex.viewmodel.MovieViewModel
@@ -32,59 +34,19 @@ class MovieFragment : Fragment() {
         adapter = MoviePagingAdapter(requireContext(), ::handleMovieClick)
         binding.movieRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.movieRecyclerView.setHasFixedSize(true)
-        binding.movieRecyclerView.adapter = adapter
+        binding.movieRecyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = LoaderAdapter(),
+            footer = LoaderAdapter()
+        )
 
-
-//        binding.tvInternetConnectionMovie.visibility = View.GONE
-//        binding.btnRetryConnectionMovie.visibility = View.GONE
-
-//        movieViewModel.getMovie()
-//        binding.btnRetryConnectionMovie.setOnClickListener {  }
 
         movieViewModel.moviesList.observe(this.viewLifecycleOwner) {
+            Log.d("imtihan", "onCreateView: $it")
             adapter.submitData(lifecycle, it)
         }
 
         return binding.root
     }
-
-//    private fun bindObserver(
-//        it: NetworkResult<DiscoverMovieResponse>,
-//        movieAdapter: MovieAdapter
-//    ) {
-//        when (it) {
-//            is NetworkResult.Loading -> binding.progressBar.isVisible = true
-//            is NetworkResult.Success -> {
-//                movieAdapter.differ.submitList(it.data!!.results)
-//                binding.progressBar.isVisible = false
-//            }
-//            is NetworkResult.Error -> {
-//                AlertDialog.Builder(requireContext())
-//                    .setTitle("Error Occurred")
-//                    .setMessage(it.message)
-//                    .setIcon(R.drawable.ic_error)
-//                    .setNeutralButton("OK!", null)
-//                    .show()
-//            }
-//        }
-//    }
-
-//    private fun connectGetMovie() {
-//        if (checkForInternet(requireContext())) {
-//            movieViewModel.getMovie()
-//            binding.progressBar.visibility = View.VISIBLE
-//            binding.tvInternetConnectionMovie.visibility = View.GONE
-//            binding.btnRetryConnectionMovie.visibility = View.GONE
-//        } else {
-//            if (movieViewModel.moviesList.value?.data?.results?.size == 0 || movieViewModel.moviesList.value?.data?.results?.size == null) {
-//                binding.tvInternetConnectionMovie.visibility = View.VISIBLE
-//                binding.btnRetryConnectionMovie.visibility = View.VISIBLE
-//            } else {
-//                binding.tvInternetConnectionMovie.visibility = View.GONE
-//                binding.btnRetryConnectionMovie.visibility = View.GONE
-//            }
-//        }
-//    }
 
     private fun handleMovieClick(movie: Movie) {
         Intent(requireContext(), SingleMovieActivity::class.java).apply {

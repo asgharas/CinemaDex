@@ -7,6 +7,7 @@ import com.asgharas.cinemadex.model.repository.CinemaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+
 @HiltViewModel
 class TvViewModel @Inject constructor(repository: CinemaRepository) : ViewModel() {
 
