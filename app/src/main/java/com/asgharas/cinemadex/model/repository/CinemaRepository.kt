@@ -13,8 +13,8 @@ import com.asgharas.cinemadex.model.data.DiscoverTVResponse
 import com.asgharas.cinemadex.model.data.FavMovie
 import com.asgharas.cinemadex.model.data.FavTv
 import com.asgharas.cinemadex.model.db.CinemaDb
-import com.asgharas.cinemadex.paging.MovieRemoteMediator
-import com.asgharas.cinemadex.paging.TvRemoteMediator
+import com.asgharas.cinemadex.paging.MoviePagingSource
+import com.asgharas.cinemadex.paging.TvPagingSource
 import com.asgharas.cinemadex.utils.network.NetworkResult
 import retrofit2.Response
 import javax.inject.Inject
@@ -44,16 +44,16 @@ class CinemaRepository @Inject constructor(
 
     fun getDiscoverMovies() = Pager(
         config = PagingConfig(pageSize = 20, maxSize = 100),
-        remoteMediator = MovieRemoteMediator(apiService, cinemaDb),
-        pagingSourceFactory = { cinemaDb.getDB().getMovies() }
-//        pagingSourceFactory = { MoviePagingSource(apiService) }
+//        remoteMediator = MovieRemoteMediator(apiService, cinemaDb),
+//        pagingSourceFactory = { cinemaDb.getDB().getMovies() }
+        pagingSourceFactory = { MoviePagingSource(apiService) }
     ).liveData
 
- fun getDiscoverTv() = Pager(
+    fun getDiscoverTv() = Pager(
         config = PagingConfig(pageSize = 20, maxSize = 100),
-     remoteMediator = TvRemoteMediator(apiService, cinemaDb),
-     pagingSourceFactory = { cinemaDb.getDB().getTvShows() }
-//     pagingSourceFactory = { TvPagingSource(apiService) }
+//     remoteMediator = TvRemoteMediator(apiService, cinemaDb),
+//     pagingSourceFactory = { cinemaDb.getDB().getTvShows() }
+        pagingSourceFactory = { TvPagingSource(apiService) }
     ).liveData
 
 
